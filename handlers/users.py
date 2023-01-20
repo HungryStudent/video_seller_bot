@@ -19,7 +19,7 @@ async def start_message(message: Message):
             await message.answer(texts.hello_admin, reply_markup=admin_kb.menu)
         else:
             await message.answer(texts.hello, reply_markup=user_kb.menu_with_trial)
-        db.add_user(message.from_user.id, message.from_user.username, message.from_user.first_name)
+        db.add_user(message.from_user.id, message.from_user.username, message.from_user.first_name, "ru")
     elif message.from_user.id == admin_id:
         await message.answer(texts.hello_admin, reply_markup=admin_kb.menu)
     elif user["trial"]:

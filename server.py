@@ -12,6 +12,6 @@ async def checkay(req: Request):
     raise HTTPException(200, "ok")
 
 
-@app.post('/error')
+@app.get('/error')
 async def ck_pay(req: Request):
     raise HTTPException(200, "ok")

@@ -5,7 +5,7 @@ import sqlite3
 database = "utils/database.db"
 
 
-def dict_factory(cursor, row):
+def dict_factory(cursor, rowq):
     d = {}
     for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
