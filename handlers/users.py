@@ -40,6 +40,11 @@ async def cancel_input(message: Message, state: FSMContext):
         await message.answer(texts.hello, reply_markup=user_kb.menu)
 
 
+@dp.message_handler(text="Купить")
+async def triaasl(message: Message):
+    await message.answer("В разработке (будет аналогично пробному видео, но с оплатой")
+
+
 @dp.message_handler(text="Пробное видео")
 async def trial(message: Message):
     user = db.get_user(message.from_user.id)
