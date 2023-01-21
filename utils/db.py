@@ -18,7 +18,7 @@ def start():
         cursor.execute(
             "CREATE TABLE IF NOT EXISTS users(user_id INT, username TEXT, first_name TEXT, trial BOOL, lang TEXT)")
         cursor.execute(
-            "CREATE TABLE IF NOT EXISTS config(price_rub INT, price_usd INT, channel_id TEXT, channel_url TEXT)")
+            "CREATE TABLE IF NOT EXISTS config(price INT, channel_id TEXT, channel_url TEXT)")
         connection.commit()
 
 
