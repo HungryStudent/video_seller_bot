@@ -127,5 +127,6 @@ async def enter_logo(message: Message, state: FSMContext):
     #                                                                   text=video_data["text"]),
     #                              reply_markup=admin_kb.new_order(message.from_user.id))
 
-    await message.answer(texts.Video.pay, reply_markup=user_kb.get_pay("https://freekassa.ru/"))
+    price = db.get_price()["price"]
+    await message.answer(texts.Video.pay.format(price=price), reply_markup=user_kb.get_pay("https://freekassa.ru/"))
     await state.finish()
