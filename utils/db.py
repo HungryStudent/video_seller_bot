@@ -34,7 +34,7 @@ def add_user(user_id, username, first_name, lang):
     with closing(sqlite3.connect(database)) as connection:
         connection.row_factory = dict_factory
         cursor: Cursor = connection.cursor()
-        cursor.execute("INSERT INTO users VALUES (?, ?, ?, TRUE, ?)", (user_id, username, first_name, lang))
+        cursor.execute("INSERT INTO users VALUES (?, ?, ?, TRUE)", (user_id, username, first_name))
         connection.commit()
 
 
@@ -68,3 +68,11 @@ def change_channel(channel_data):
         cursor: Cursor = connection.cursor()
         cursor.execute("UPDATE config SET channel_id = ?, channel_url = ?", (channel_data["id"], channel_data["url"]))
         connection.commit()
+
+
+def get_price():
+    with closing(sqlite3.connect(database)) as connection:
+        connection.row_factory = dict_factory
+        cursor: Cursor = connection.cursor()
+        cursor.execute("SELECT price FROM config")
+        return cursor.fetchone()

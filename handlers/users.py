@@ -40,9 +40,16 @@ async def cancel_input(message: Message, state: FSMContext):
         await message.answer(texts.hello, reply_markup=user_kb.menu)
 
 
+@dp.message_handler(text="Поддержка")
+async def support(message: Message):
+    await message.answer(texts.support)
+
+
 @dp.message_handler(text="Купить")
-async def triaasl(message: Message):
-    await message.answer("В разработке (будет аналогично пробному видео, но с оплатой")
+async def start_buy(message: Message):
+    price = db.get_price()["price"]
+    await message.answer(texts.Video.enter_url.format(price=price), reply_markup=user_kb.cancel)
+    await states.CreateVideo.enter_url.set()
 
 
 @dp.message_handler(text="Пробное видео")
@@ -67,7 +74,7 @@ async def enter_url(message: Message, state: FSMContext):
 async def enter_logo(message: Message, state: FSMContext):
     await state.update_data(logo=message.photo[-1].file_id)
 
-    await message.answer(texts.TrialVideo.enter_text)
+    await message.answer(texts.TrialVideo.enter_text, reply_markup=user_kb.skip)
     await states.CreateTrialVideo.next()
 
 
@@ -87,4 +94,38 @@ async def enter_logo(message: Message, state: FSMContext):
 
     await message.answer(texts.TrialVideo.finish)
     db.change_trial(message.from_user.id)
+    await state.finish()
+
+
+@dp.message_handler(state=states.CreateVideo.enter_url)
+async def enter_url(message: Message, state: FSMContext):
+    await state.update_data(url=message.text)
+
+    await message.answer(texts.Video.enter_logo)
+    await states.CreateVideo.next()
+
+
+@dp.message_handler(state=states.CreateVideo.enter_logo, content_types="photo")
+async def enter_logo(message: Message, state: FSMContext):
+    await state.update_data(logo=message.photo[-1].file_id)
+
+    await message.answer(texts.Video.enter_text, reply_markup=user_kb.skip)
+    await states.CreateVideo.next()
+
+
+@dp.message_handler(state=states.CreateVideo.enter_text)
+async def enter_logo(message: Message, state: FSMContext):
+    text = message.text
+    if message.text == "Пропустить":
+        text = "-"
+    await state.update_data(text=text)
+
+    video_data = await state.get_data()
+    # await message.bot.send_photo(admin_id, video_data["logo"],
+    #                              caption=texts.new_order.format(username=message.from_user.username,
+    #                                                                   url=video_data["url"],
+    #                                                                   text=video_data["text"]),
+    #                              reply_markup=admin_kb.new_order(message.from_user.id))
+
+    await message.answer(texts.Video.pay, reply_markup=user_kb.get_pay("https://freekassa.ru/"))
     await state.finish()
