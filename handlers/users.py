@@ -12,6 +12,7 @@ from utils import db
 
 @dp.message_handler(commands='start')
 @dp.message_handler(text="В главное меню")
+@dp.message_handler(text="Начать сначала")
 async def start_message(message: Message):
     user = db.get_user(message.from_user.id)
     if user is None:
@@ -47,12 +48,11 @@ async def support(message: Message):
 
 @dp.message_handler(text="Купить")
 async def start_buy(message: Message):
-    price = db.get_price()["price"]
-    await message.answer(texts.Video.enter_url.format(price=price), reply_markup=user_kb.cancel)
+    await message.answer(texts.Video.enter_url, reply_markup=user_kb.cancel)
     await states.CreateVideo.enter_url.set()
 
 
-@dp.message_handler(text="Пробное видео")
+@dp.message_handler(text="Пробное видео в низком качестве")
 async def trial(message: Message):
     user = db.get_user(message.from_user.id)
     if user["trial"]:
@@ -92,7 +92,7 @@ async def enter_logo(message: Message, state: FSMContext):
                                                                       text=video_data["text"]),
                                  reply_markup=admin_kb.new_order(message.from_user.id))
 
-    await message.answer(texts.TrialVideo.finish)
+    await message.answer(texts.TrialVideo.finish, reply_markup=user_kb.start_over)
     db.change_trial(message.from_user.id)
     await state.finish()
 

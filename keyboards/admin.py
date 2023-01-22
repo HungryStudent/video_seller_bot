@@ -1,11 +1,10 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
 
-
 order_data = CallbackData("order", "user_id")
 
 menu = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2).add(KeyboardButton("Купить"),
-                                                                  KeyboardButton("Пробное видео"),
+                                                                  KeyboardButton("Пробное видео в низком качестве"),
                                                                   KeyboardButton("Настройки"))
 
 settings = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2).add(KeyboardButton("Изменить цену"),

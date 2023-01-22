@@ -3,8 +3,11 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMar
 menu = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2).add(KeyboardButton("Купить"),
                                                                   KeyboardButton("Поддержка"))
 
+start_over = ReplyKeyboardMarkup(resize_keyboard=True).add(KeyboardButton("Начать сначала"))
+
 menu_with_trial = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2).add(KeyboardButton("Купить"),
-                                                                             KeyboardButton("Пробное видео"),
+                                                                             KeyboardButton(
+                                                                                 "Пробное видео в низком качестве"),
                                                                              KeyboardButton("Поддержка"))
 
 cancel = ReplyKeyboardMarkup(resize_keyboard=True).add(KeyboardButton("Отмена"))
