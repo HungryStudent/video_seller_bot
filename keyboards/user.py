@@ -20,4 +20,5 @@ def get_channel_url(url):
 
 
 def get_pay(pay_url):
-    return InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton("Оплатить", url=pay_url))
+    return InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton("Оплатить", url=pay_url),
+                                                 InlineKeyboardButton("Начать сначала", callback_data="start_over"))

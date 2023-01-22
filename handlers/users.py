@@ -1,5 +1,5 @@
 from aiogram.dispatcher import FSMContext
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 
 import keyboards.admin as admin_kb
 import keyboards.user as user_kb
@@ -27,6 +27,12 @@ async def start_message(message: Message):
         await message.answer(texts.hello, reply_markup=user_kb.menu_with_trial)
     else:
         await message.answer(texts.hello, reply_markup=user_kb.menu)
+
+
+@dp.callback_query_handler(text="start_over")
+async def start_over(call: CallbackQuery):
+    await start_message(call.message)
+    await call.answer()
 
 
 @dp.message_handler(state="*", text="Отмена")
@@ -91,7 +97,6 @@ async def enter_logo(message: Message, state: FSMContext):
                                                                       url=video_data["url"],
                                                                       text=video_data["text"]),
                                  reply_markup=admin_kb.new_order(message.from_user.id))
-
     await message.answer(texts.TrialVideo.finish, reply_markup=user_kb.start_over)
     db.change_trial(message.from_user.id)
     await state.finish()
