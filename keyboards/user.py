@@ -41,7 +41,8 @@ def get_skip(lang):
 
 
 def get_channel_url(url, lang):
-    return InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(subscribe[lang], url=url))
+    return InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(subscribe[lang], url=url),
+                                                 InlineKeyboardButton(start_over[lang], callback_data="start_over"))
 
 
 def get_pay(pay_url, lang):
