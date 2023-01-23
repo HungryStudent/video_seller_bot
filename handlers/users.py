@@ -33,7 +33,9 @@ async def reg_user(call: CallbackQuery):
     lang = db.get_lang(call.from_user.id)
     user = db.get_user(call.from_user.id)
     if user:
+        await call.message.delete()
         return
+
     if call.from_user.id == admin_id:
         await call.message.answer(texts.hello_admin[lang], reply_markup=admin_kb.menu)
     else:

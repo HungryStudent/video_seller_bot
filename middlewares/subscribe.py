@@ -21,7 +21,7 @@ class CheckSubMiddleware(BaseMiddleware):
         try:
             status: ChatMember = await bot.get_chat_member(channel_data["id"], user_id)
             if status.status == "left":
-                await bot.send_message(user_id, sub_error, reply_markup=user.get_channel_url(channel_data["url"], "ru"))
+                await bot.send_message(user_id, sub_error["ru"], reply_markup=user.get_channel_url(channel_data["url"], "ru"))
                 raise CancelHandler()
         except ChatNotFound as e:
             print(e)
