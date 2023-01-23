@@ -20,9 +20,9 @@ async def check_pay_post(MERCHANT_ORDER_ID):
     user = db.get_user(order["user_id"])
     await bot.send_message(order["user_id"], texts.Video.finish[lang])
     await bot.send_photo(admin_id, order["file_id"],
-                         caption=texts.new_order[lang].format(username=user["username"],
-                                                              url=order["url"],
-                                                              text=order["slogan"]),
+                         caption=texts.new_trial_order[lang].format(username=user["username"],
+                                                                    url=order["url"],
+                                                                    text=order["slogan"]),
                          reply_markup=admin_kb.new_order(order["user_id"], MERCHANT_ORDER_ID))
     return 'YES'
 
