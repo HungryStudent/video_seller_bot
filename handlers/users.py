@@ -138,7 +138,7 @@ async def enter_logo(message: Message, state: FSMContext):
                                  caption=texts.new_trial_order[lang].format(username=message.from_user.username,
                                                                             url=video_data["url"],
                                                                             text=video_data["text"]),
-                                 reply_markup=admin_kb.new_order(message.from_user.id))
+                                 reply_markup=admin_kb.new_order(message.from_user.id, 0))
     await message.answer(texts.TrialVideo.finish[lang], reply_markup=user_kb.get_start_over(lang))
     db.change_trial(message.from_user.id)
     await state.finish()
