@@ -21,7 +21,7 @@ async def start_message(message: Message):
     if user is None:
         await message.answer(texts.choose_lang, reply_markup=user_kb.lang)
     elif message.from_user.id == admin_id:
-        await message.answer(texts.hello_admin[lang], reply_markup=admin_kb.menu)
+        await message.answer(texts.hello_admin, reply_markup=admin_kb.menu)
     elif user["trial"]:
         await message.answer(texts.hello[lang], reply_markup=user_kb.get_menu_with_trial(lang))
     else:
@@ -37,7 +37,7 @@ async def reg_user(call: CallbackQuery):
         return
 
     if call.from_user.id == admin_id:
-        await call.message.answer(texts.hello_admin[lang], reply_markup=admin_kb.menu)
+        await call.message.answer(texts.hello_admin, reply_markup=admin_kb.menu)
     else:
         await call.message.answer(texts.hello[lang], reply_markup=user_kb.get_menu_with_trial(lang))
     db.add_user(call.from_user.id, call.from_user.username, call.from_user.first_name, call.data.split(":")[1])
@@ -51,7 +51,7 @@ async def start_over(call: CallbackQuery):
     if user is None:
         await call.message.answer(texts.choose_lang, reply_markup=user_kb.lang)
     elif call.from_user.id == admin_id:
-        await call.message.answer(texts.hello_admin[lang], reply_markup=admin_kb.menu)
+        await call.message.answer(texts.hello_admin, reply_markup=admin_kb.menu)
     elif user["trial"]:
         await call.message.answer(texts.hello[lang], reply_markup=user_kb.get_menu_with_trial(lang))
     else:
@@ -66,7 +66,7 @@ async def cancel_input(message: Message, state: FSMContext):
     await state.finish()
     user = db.get_user(message.from_user.id)
     if message.from_user.id == admin_id:
-        await message.answer(texts.hello_admin[lang], reply_markup=admin_kb.menu)
+        await message.answer(texts.hello_admin, reply_markup=admin_kb.menu)
     elif user["trial"]:
         await message.answer(texts.hello[lang], reply_markup=user_kb.get_menu_with_trial(lang))
     else:

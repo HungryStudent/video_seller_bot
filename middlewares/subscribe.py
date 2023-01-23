@@ -12,7 +12,6 @@ from utils import db
 
 class CheckSubMiddleware(BaseMiddleware):
     async def on_pre_process_update(self, update: Update, data: dict):
-
         if update.message:
             user_id = update.message.from_user.id
         else:

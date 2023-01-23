@@ -13,6 +13,7 @@ from utils import db
 
 @dp.callback_query_handler(admin_kb.order_data.filter())
 async def send_video_to_user(call: CallbackQuery, callback_data: dict, state: FSMContext):
+    lang = db.get_lang(call.from_user.id)
     user_id = callback_data["user_id"]
 
     await states.SendVideo.enter_video.set()

@@ -2,8 +2,7 @@ choose_lang = "Здравствуйте, выберите язык\nHello, choos
 
 hello = {"ru": "текст",
          "en": "text"}
-hello_admin = {"ru": "Вы вошли как администратор",
-               "en": "You are logged in as an administrator"}
+hello_admin = "Вы вошли как администратор"
 cancel_input = {"ru": "Ввод остановлен",
                 "en": "Input stopped"}
 
@@ -35,19 +34,14 @@ order_for_user = {"ru": "Результат",
 sub_error = {"ru": "Для того, чтобы пользоваться ботом, подпишитесь на канал и повторите попытку",
              "en": "In order to use the bot, subscribe to the channel and try again"}
 
-admin_settings = {"ru": "Вы перешли в настройки",
-                  "en": "You have gone to settings"}
+admin_settings = "Вы перешли в настройки"
 
 
 class Settings:
-    enter_price = {"ru": "Введите новую цену",
-                   "en": "Enter a new price"}
-    enter_channel_id = {"ru": "Введите id канала",
-                        "en": "Enter the channel id"}
-    enter_channel_url = {"ru": "Введите ссылку на канал",
-                         "en": "Enter the link to the channel"}
-    finish = {"ru": "Данные обновлены",
-              "en": "Data updated"}
+    enter_price = "Введите новую цену"
+    enter_channel_id = "Введите id канала"
+    enter_channel_url = "Введите ссылку на канал"
+    finish = "Данные обновлены"
 
 
 class TrialVideo:
@@ -77,7 +71,5 @@ class Video:
 
 
 class SendVideo:
-    enter_video = {"ru": "Пришлите видео",
-                   "en": "Send a video"}
-    finish = {"ru": "Видео отправлено заказчику",
-              "en": "Video sent to the customer"}
+    enter_video = "Пришлите видео"
+    finish = "Видео отправлено заказчику"
