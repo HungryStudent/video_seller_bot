@@ -17,8 +17,7 @@ feedback_channel = {"ru": "Отзывы", "en": "Feedbacks"}
 
 def get_menu(lang):
     return ReplyKeyboardMarkup(resize_keyboard=True, row_width=2).add(KeyboardButton(buy[lang]),
-                                                                      KeyboardButton(feedback_channel[lang]),
-                                                                      KeyboardButton(support[lang]))
+                                                                      KeyboardButton(feedback_channel[lang]))
 
 
 def get_start_over(lang):
@@ -28,8 +27,7 @@ def get_start_over(lang):
 def get_menu_with_trial(lang):
     return ReplyKeyboardMarkup(resize_keyboard=True, row_width=2).add(KeyboardButton(buy[lang]),
                                                                       KeyboardButton(trial_video[lang]),
-                                                                      KeyboardButton(feedback_channel[lang]),
-                                                                      KeyboardButton(support[lang]))
+                                                                      KeyboardButton(feedback_channel[lang]))
 
 
 def get_cancel(lang):
