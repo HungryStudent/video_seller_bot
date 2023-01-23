@@ -8,7 +8,7 @@ import states.user as states
 from config import admin_id
 from handlers import texts
 from create_bot import dp
-from utils import db
+from utils import db, pay
 
 
 @dp.message_handler(commands='start')
@@ -47,7 +47,15 @@ async def reg_user(call: CallbackQuery):
 @dp.callback_query_handler(text="start_over")
 async def start_over(call: CallbackQuery):
     lang = db.get_lang(call.from_user.id)
-    await start_message(call.message)
+    user = db.get_user(call.from_user.id)
+    if user is None:
+        await call.message.answer(texts.choose_lang, reply_markup=user_kb.lang)
+    elif call.from_user.id == admin_id:
+        await call.message.answer(texts.hello_admin[lang], reply_markup=admin_kb.menu)
+    elif user["trial"]:
+        await call.message.answer(texts.hello[lang], reply_markup=user_kb.get_menu_with_trial(lang))
+    else:
+        await call.message.answer(texts.hello[lang], reply_markup=user_kb.get_menu(lang))
     await call.answer()
 
 
@@ -163,6 +171,7 @@ async def enter_logo(message: Message, state: FSMContext):
     #                              reply_markup=admin_kb.new_order(message.from_user.id))
 
     price = db.get_price(lang)["price"]
+    pay_url = pay.get_pay(message.from_user.id, price, lang)
     await message.answer(texts.Video.pay[lang].format(price=price),
-                         reply_markup=user_kb.get_pay("https://freekassa.ru/", lang))
+                         reply_markup=user_kb.get_pay(pay_url, lang))
     await state.finish()

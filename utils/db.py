@@ -19,7 +19,7 @@ def start():
             "CREATE TABLE IF NOT EXISTS users(user_id INT, username TEXT, first_name TEXT, trial BOOL, lang TEXT)")
         cursor.execute(
             "CREATE TABLE IF NOT EXISTS config(price_rub INT, price_usd INT, channel_id TEXT, channel_url TEXT)")
-        cursor.execute('INSERT INTO config VALUES(250, 4, -1001363887843, "https://t.me/renderforest_bot")')
+        # cursor.execute('INSERT INTO config VALUES(250, 4, -1001363887843, "https://t.me/renderforest_bot")')
         connection.commit()
 
 
