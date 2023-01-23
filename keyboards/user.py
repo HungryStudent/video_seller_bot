@@ -1,24 +1,45 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
-menu = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2).add(KeyboardButton("Купить"),
-                                                                  KeyboardButton("Поддержка"))
+lang = InlineKeyboardMarkup(row_width=2).add(InlineKeyboardButton("Русский 🇷🇺", callback_data="lang:ru"),
+                                             InlineKeyboardButton("Английский 🇺🇸", callback_data="lang:en"))
 
-start_over = ReplyKeyboardMarkup(resize_keyboard=True).add(KeyboardButton("Начать сначала"))
-
-menu_with_trial = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2).add(KeyboardButton("Купить"),
-                                                                             KeyboardButton(
-                                                                                 "Пробное видео в низком качестве"),
-                                                                             KeyboardButton("Поддержка"))
-
-cancel = ReplyKeyboardMarkup(resize_keyboard=True).add(KeyboardButton("Отмена"))
-
-skip = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(KeyboardButton("Пропустить"))
+buy = {"ru": "Купить", "en": "Buy"}
+support = {"ru": "Поддержка", "en": "Support"}
+trial_video = {"ru": "Пробное видео в низком качестве", "en": "Trial video in low quality"}
+cancel = {"ru": "Отмена", "en": "Cancel"}
+skip = {"ru": "Пропустить", "en": "Skip"}
+subscribe = {"ru": "Подписаться", "en": "Subscribe"}
+pay = {"ru": "Оплатить", "en": "To pay"}
+start_over = {"ru": "Начать сначала", "en": "Start over"}
 
 
-def get_channel_url(url):
-    return InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton("Подписаться", url=url))
+def get_menu(lang):
+    return ReplyKeyboardMarkup(resize_keyboard=True, row_width=2).add(KeyboardButton(buy[lang]),
+                                                                      KeyboardButton(support[lang]))
 
 
-def get_pay(pay_url):
-    return InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton("Оплатить", url=pay_url),
-                                                 InlineKeyboardButton("Начать сначала", callback_data="start_over"))
+def get_start_over(lang):
+    return ReplyKeyboardMarkup(resize_keyboard=True).add(KeyboardButton(start_over[lang]))
+
+
+def get_menu_with_trial(lang):
+    return ReplyKeyboardMarkup(resize_keyboard=True, row_width=2).add(KeyboardButton(buy[lang]),
+                                                               KeyboardButton(trial_video[lang]),
+                                                               KeyboardButton(support[lang]))
+
+
+def get_cancel(lang):
+    return ReplyKeyboardMarkup(resize_keyboard=True).add(KeyboardButton(cancel[lang]))
+
+
+def get_skip(lang):
+    return ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(KeyboardButton(skip[lang]))
+
+
+def get_channel_url(url, lang):
+    return InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(subscribe[lang], url=url))
+
+
+def get_pay(pay_url, lang):
+    return InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(pay[lang], url=pay_url),
+                                                 InlineKeyboardButton(start_over[lang], callback_data="start_over"))

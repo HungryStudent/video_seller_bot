@@ -7,7 +7,8 @@ menu = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2).add(KeyboardButton
                                                                   KeyboardButton("Пробное видео в низком качестве"),
                                                                   KeyboardButton("Настройки"))
 
-settings = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2).add(KeyboardButton("Изменить цену"),
+settings = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2).add(KeyboardButton("Изменить цену RUB"),
+                                                                      KeyboardButton("Изменить цену USD"),
                                                                       KeyboardButton("Изменить канал"),
                                                                       KeyboardButton("В главное меню"))
 

@@ -12,6 +12,7 @@ from utils import db
 
 class CheckSubMiddleware(BaseMiddleware):
     async def on_pre_process_update(self, update: Update, data: dict):
+
         if update.message:
             user_id = update.message.from_user.id
         else:
@@ -25,3 +26,4 @@ class CheckSubMiddleware(BaseMiddleware):
         except ChatNotFound as e:
             print(e)
             await bot.send_message(admin_id, "Проблема с каналом")
+

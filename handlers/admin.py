@@ -1,3 +1,4 @@
+from aiogram.dispatcher.filters import Text
 from aiogram.types import Message, CallbackQuery
 from aiogram.dispatcher import FSMContext
 
@@ -34,11 +35,11 @@ async def settings(message: Message):
     await message.answer(texts.admin_settings, reply_markup=admin_kb.settings)
 
 
-@dp.message_handler(text="Изменить цену", user_id=admin_id)
-async def change_price(message: Message):
+@dp.message_handler(Text(startswith="Изменить цену"), user_id=admin_id)
+async def change_price(message: Message, state: FSMContext):
     await message.answer(texts.Settings.enter_price, reply_markup=user_kb.cancel)
-
     await states.Settings.enter_price.set()
+    await state.update_data(currency=message.text.split()[2])
 
 
 @dp.message_handler(state=states.Settings.enter_price)
@@ -48,7 +49,8 @@ async def enter_price(message: Message, state: FSMContext):
     except ValueError:
         await message.answer("Введите целое число")
         return
-    db.change_price(price)
+    fsm_data = await state.get_data()
+    db.change_price(price, fsm_data["currency"])
     await message.answer(texts.Settings.finish)
     await state.finish()
 

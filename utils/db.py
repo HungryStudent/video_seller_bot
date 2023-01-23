@@ -18,7 +18,8 @@ def start():
         cursor.execute(
             "CREATE TABLE IF NOT EXISTS users(user_id INT, username TEXT, first_name TEXT, trial BOOL, lang TEXT)")
         cursor.execute(
-            "CREATE TABLE IF NOT EXISTS config(price INT, channel_id TEXT, channel_url TEXT)")
+            "CREATE TABLE IF NOT EXISTS config(price_rub INT, price_usd INT, channel_id TEXT, channel_url TEXT)")
+        cursor.execute('INSERT INTO config VALUES(250, 4, -1001363887843, "https://t.me/renderforest_bot")')
         connection.commit()
 
 
@@ -30,11 +31,22 @@ def get_user(user_id):
         return cursor.fetchone()
 
 
+def get_lang(user_id):
+    with closing(sqlite3.connect(database)) as connection:
+        connection.row_factory = dict_factory
+        cursor: Cursor = connection.cursor()
+        cursor.execute("SELECT lang FROM users WHERE user_id = ?", (user_id,))
+        data = cursor.fetchone()
+        if data is None:
+            return "ru"
+        return data["lang"]
+
+
 def add_user(user_id, username, first_name, lang):
     with closing(sqlite3.connect(database)) as connection:
         connection.row_factory = dict_factory
         cursor: Cursor = connection.cursor()
-        cursor.execute("INSERT INTO users VALUES (?, ?, ?, TRUE)", (user_id, username, first_name))
+        cursor.execute("INSERT INTO users VALUES (?, ?, ?, TRUE, ?)", (user_id, username, first_name, lang))
         connection.commit()
 
 
@@ -54,11 +66,14 @@ def get_channel_config():
         return cursor.fetchone()
 
 
-def change_price(price):
+def change_price(price, currency):
     with closing(sqlite3.connect(database)) as connection:
         connection.row_factory = dict_factory
         cursor: Cursor = connection.cursor()
-        cursor.execute("UPDATE config SET price = ?", (price,))
+        if currency == "RUB":
+            cursor.execute("UPDATE config SET price_rub = ?", (price,))
+        if currency == "USD":
+            cursor.execute("UPDATE config SET price_usd = ?", (price,))
         connection.commit()
 
 
@@ -70,9 +85,12 @@ def change_channel(channel_data):
         connection.commit()
 
 
-def get_price():
+def get_price(currency):
     with closing(sqlite3.connect(database)) as connection:
         connection.row_factory = dict_factory
         cursor: Cursor = connection.cursor()
-        cursor.execute("SELECT price FROM config")
+        if currency == "ru":
+            cursor.execute("SELECT price_rub as price FROM config")
+        if currency == "en":
+            cursor.execute("SELECT price_usd as price FROM config")
         return cursor.fetchone()
