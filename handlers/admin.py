@@ -15,19 +15,26 @@ from utils import db
 async def send_video_to_user(call: CallbackQuery, callback_data: dict, state: FSMContext):
     lang = db.get_lang(call.from_user.id)
     user_id = callback_data["user_id"]
+    order_id = int(callback_data["order_id"])
 
     await states.SendVideo.enter_video.set()
     await state.update_data(user_id=user_id)
-    await call.message.answer(texts.SendVideo.enter_video)
+    await state.update_data(order_id=order_id)
+    await call.message.answer(texts.SendVideo.enter_video, reply_markup=user_kb.get_cancel(lang))
     await call.answer()
 
 
 @dp.message_handler(state=states.SendVideo.enter_video, content_types="video")
 async def enter_video(message: Message, state: FSMContext):
     user_data = await state.get_data()
-    await message.bot.send_video(user_data["user_id"], message.video.file_id, caption=texts.order_for_user)
+    lang = db.get_lang(user_data["user_id"])
+    user_markup = None
+    if user_data["order_id"] != 0:
+        user_markup = user_kb.get_order(user_data["order_id"], lang)
+    await message.bot.send_video(user_data["user_id"], message.video.file_id, caption=texts.order_for_user[lang],
+                                 reply_markup=user_markup)
 
-    await message.answer(texts.SendVideo.finish)
+    await message.answer(texts.SendVideo.finish, reply_markup=admin_kb.menu)
     await state.finish()
 
 

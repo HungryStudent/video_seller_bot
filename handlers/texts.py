@@ -6,6 +6,9 @@ hello_admin = "Вы вошли как администратор"
 cancel_input = {"ru": "Ввод остановлен",
                 "en": "Input stopped"}
 
+feedbacks = {"ru": "Отзывы: @reviews_renderforest",
+             "en": "Feedbacks: @reviews_renderforest"}
+
 support = {"ru": "По всем вопросам: @skilord1988",
            "en": "For all questions: @skilord1988"}
 
@@ -20,6 +23,15 @@ new_trial_order = {"ru": """Новый заказ от @{username}
 Link {url}
 Slogan: {text}
 Note: trial version"""}
+
+new_gift_order = {"ru": """Новый заказ от @{username}
+Ссылка {url}
+Слоган: {text}
+Примечание: интро за отзыв""",
+                  "en": """New order from @{username}
+Link {url}
+Slogan: {text}
+Note: intro for the review"""}
 
 new_order = {"ru": """Новый заказ от @{username}
 Ссылка: {url}
@@ -52,7 +64,7 @@ class TrialVideo:
                   "en": "Send a photo of the logo in high quality in PNG on a transparent background"}
     enter_text = {"ru": "Введите слоган или сайт, либо пропустите этот шаг",
                   "en": "Enter a slogan or website, or skip this step"}
-    finish = {"ru": "текст",
+    finish = {"ru": "Ожидайте, ваша заявка отправлена",
               "en": "Wait, your application has been sent"}
 
 
@@ -64,10 +76,18 @@ class Video:
                   "en": "Send a photo of the logo in high quality in PNG on a transparent background"}
     enter_text = {"ru": "Введите слоган или сайт, либо пропустите этот шаг",
                   "en": "Enter a slogan or website, or skip this step"}
-    finish = {"ru": "текст",
-              "en": "Wait, your application has been sent"}
+    gift = {"ru": "За интро платить не нужно, так как вы оставили отзыв.\nОжидайте, ваша заявка отправлена",
+            "en": "There is no need to pay for the intro, since you left a review.\nWait, your application has been sent"}
+    finish = {"ru": "Оплата проведена успешно, ожидайте выполнение заказа",
+              "en": "The payment was made successfully, wait for the order to be completed"}
     pay = {"ru": "Стоимость интро: {price} рублей",
            "en": "Intro cost: {price} dollars"}
+
+
+class StayFeedback:
+    enter_feedback = {"ru": "Напишите отзыв", "en": "Write a review"}
+    finish = {"ru": "Отзыв отправлен, вам начислен один бесплатный заказ интро",
+              "en": "The review has been sent, you are credited with one free order intro"}
 
 
 class SendVideo:

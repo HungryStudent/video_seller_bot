@@ -13,6 +13,5 @@ class CreateVideo(StatesGroup):
     enter_text = State()
 
 
-class Record(StatesGroup):
-    send_location = State()
-    enter_note = State()
+class StayFeedback(StatesGroup):
+    enter_feedback = State()

@@ -1,7 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
-lang = InlineKeyboardMarkup(row_width=2).add(InlineKeyboardButton("Русский 🇷🇺", callback_data="lang:ru"),
-                                             InlineKeyboardButton("Английский 🇺🇸", callback_data="lang:en"))
+select_lang = InlineKeyboardMarkup(row_width=2).add(InlineKeyboardButton("Русский 🇷🇺", callback_data="lang:ru"),
+                                                    InlineKeyboardButton("Английский 🇺🇸", callback_data="lang:en"))
 
 buy = {"ru": "Купить", "en": "Buy"}
 support = {"ru": "Поддержка", "en": "Support"}
@@ -11,10 +11,13 @@ skip = {"ru": "Пропустить", "en": "Skip"}
 subscribe = {"ru": "Подписаться", "en": "Subscribe"}
 pay = {"ru": "Оплатить", "en": "To pay"}
 start_over = {"ru": "Начать сначала", "en": "Start over"}
+feedback = {"ru": "Оставить отзыв", "en": "Leave feedback"}
+feedback_channel = {"ru": "Отзывы", "en": "Feedbacks"}
 
 
 def get_menu(lang):
     return ReplyKeyboardMarkup(resize_keyboard=True, row_width=2).add(KeyboardButton(buy[lang]),
+                                                                      KeyboardButton(feedback_channel[lang]),
                                                                       KeyboardButton(support[lang]))
 
 
@@ -24,8 +27,9 @@ def get_start_over(lang):
 
 def get_menu_with_trial(lang):
     return ReplyKeyboardMarkup(resize_keyboard=True, row_width=2).add(KeyboardButton(buy[lang]),
-                                                               KeyboardButton(trial_video[lang]),
-                                                               KeyboardButton(support[lang]))
+                                                                      KeyboardButton(trial_video[lang]),
+                                                                      KeyboardButton(feedback_channel[lang]),
+                                                                      KeyboardButton(support[lang]))
 
 
 def get_cancel(lang):
@@ -43,3 +47,9 @@ def get_channel_url(url, lang):
 def get_pay(pay_url, lang):
     return InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(pay[lang], url=pay_url),
                                                  InlineKeyboardButton(start_over[lang], callback_data="start_over"))
+
+
+def get_order(order_id, lang):
+    return InlineKeyboardMarkup(row_width=1).add(
+        InlineKeyboardButton(feedback[lang], callback_data=f"feedback:{order_id}"),
+        InlineKeyboardButton(start_over[lang], callback_data="start_over"))

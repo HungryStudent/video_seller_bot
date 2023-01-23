@@ -5,7 +5,7 @@ from aiogram.types import Message, CallbackQuery
 import keyboards.admin as admin_kb
 import keyboards.user as user_kb
 import states.user as states
-from config import admin_id
+from config import admin_id, feedback_chat_id
 from handlers import texts
 from create_bot import dp
 from utils import db, pay
@@ -19,7 +19,7 @@ async def start_message(message: Message):
     lang = db.get_lang(message.from_user.id)
     user = db.get_user(message.from_user.id)
     if user is None:
-        await message.answer(texts.choose_lang, reply_markup=user_kb.lang)
+        await message.answer(texts.choose_lang, reply_markup=user_kb.select_lang)
     elif message.from_user.id == admin_id:
         await message.answer(texts.hello_admin, reply_markup=admin_kb.menu)
     elif user["trial"]:
@@ -49,7 +49,7 @@ async def start_over(call: CallbackQuery):
     lang = db.get_lang(call.from_user.id)
     user = db.get_user(call.from_user.id)
     if user is None:
-        await call.message.answer(texts.choose_lang, reply_markup=user_kb.lang)
+        await call.message.answer(texts.choose_lang, reply_markup=user_kb.select_lang)
     elif call.from_user.id == admin_id:
         await call.message.answer(texts.hello_admin, reply_markup=admin_kb.menu)
     elif user["trial"]:
@@ -71,6 +71,13 @@ async def cancel_input(message: Message, state: FSMContext):
         await message.answer(texts.hello[lang], reply_markup=user_kb.get_menu_with_trial(lang))
     else:
         await message.answer(texts.hello[lang], reply_markup=user_kb.get_menu(lang))
+
+
+@dp.message_handler(text="Отзывы")
+@dp.message_handler(text="Feedbacks")
+async def feedbacks(message: Message):
+    lang = db.get_lang(message.from_user.id)
+    await message.answer(texts.feedbacks[lang])
 
 
 @dp.message_handler(text="Поддержка")
@@ -164,14 +171,42 @@ async def enter_logo(message: Message, state: FSMContext):
     await state.update_data(text=text)
 
     video_data = await state.get_data()
-    # await message.bot.send_photo(admin_id, video_data["logo"],
-    #                              caption=texts.new_order.format(username=message.from_user.username,
-    #                                                                   url=video_data["url"],
-    #                                                                   text=video_data["text"]),
-    #                              reply_markup=admin_kb.new_order(message.from_user.id))
+    user = db.get_user(message.from_user.id)
+    if user["feedback_gift"]:
+        await message.bot.send_photo(admin_id, video_data["logo"],
+                                     caption=texts.new_gift_order[lang].format(username=message.from_user.username,
+                                                                               url=video_data["url"],
+                                                                               text=video_data["text"]),
+                                     reply_markup=admin_kb.new_order(message.from_user.id, 0))
+        db.remove_feedback_gift(message.from_user.id)
+        await message.answer(texts.Video.gift[lang], reply_markup=user_kb.get_menu(lang))
+    else:
+        price = db.get_price(lang)["price"]
+        order_id = db.create_order(message.from_user.id, video_data)
+        pay_url = pay.get_pay(order_id, price, lang)
+        await message.answer(texts.Video.pay[lang].format(price=price),
+                             reply_markup=user_kb.get_pay(pay_url, lang))
+    await state.finish()
 
-    price = db.get_price(lang)["price"]
-    pay_url = pay.get_pay(message.from_user.id, price, lang)
-    await message.answer(texts.Video.pay[lang].format(price=price),
-                         reply_markup=user_kb.get_pay(pay_url, lang))
+
+@dp.callback_query_handler(Text(startswith="feedback"))
+async def stay_feedback(call: CallbackQuery, state: FSMContext):
+    lang = db.get_lang(call.from_user.id)
+    order_id = int(call.data.split(":")[1])
+    if db.get_order(order_id)["have_feedback"]:
+        await call.answer("Вы уже оставили отзыв по этому заказу")
+        return
+    await states.StayFeedback.enter_feedback.set()
+    await state.update_data(order_id=order_id)
+    await call.message.answer(texts.StayFeedback.enter_feedback[lang])
+    await call.answer()
+
+
+@dp.message_handler(state=states.StayFeedback.enter_feedback)
+async def enter_feedback(message: Message, state: FSMContext):
+    lang = db.get_lang(message.from_user.id)
+    data = await state.get_data()
+    db.change_feedback_status(data["order_id"], message.from_user.id)
+    await message.answer(texts.StayFeedback.finish[lang])
+    await message.forward(feedback_chat_id)
     await state.finish()
