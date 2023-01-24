@@ -9,8 +9,6 @@ cancel_input = {"ru": "Ввод остановлен",
 feedbacks = {"ru": "Отзывы: @reviews_renderforest",
              "en": "Feedbacks: @reviews_renderforest"}
 
-support = {"ru": "По всем вопросам: @skilord1988",
-           "en": "For all questions: @skilord1988"}
 
 trial_error = {"ru": "Вы использовали свой пробный период",
                "en": "Have you used your trial period"}

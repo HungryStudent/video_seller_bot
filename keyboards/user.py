@@ -4,7 +4,6 @@ select_lang = InlineKeyboardMarkup(row_width=2).add(InlineKeyboardButton("Рус
                                                     InlineKeyboardButton("Английский 🇺🇸", callback_data="lang:en"))
 
 buy = {"ru": "Купить", "en": "Buy"}
-support = {"ru": "Поддержка", "en": "Support"}
 trial_video = {"ru": "Пробное видео в низком качестве", "en": "Trial video in low quality"}
 cancel = {"ru": "Отмена", "en": "Cancel"}
 skip = {"ru": "Пропустить", "en": "Skip"}
@@ -13,6 +12,7 @@ pay = {"ru": "Оплатить", "en": "To pay"}
 start_over = {"ru": "Начать сначала", "en": "Start over"}
 feedback = {"ru": "Оставить отзыв", "en": "Leave feedback"}
 feedback_channel = {"ru": "Отзывы", "en": "Feedbacks"}
+gift = {"ru": "Бесплатное интро", "en": "Free intro"}
 
 
 def get_menu(lang):
@@ -52,3 +52,7 @@ def get_order(order_id, lang):
     return InlineKeyboardMarkup(row_width=1).add(
         InlineKeyboardButton(feedback[lang], callback_data=f"feedback:{order_id}"),
         InlineKeyboardButton(start_over[lang], callback_data="start_over"))
+
+
+def get_gift(lang):
+    return InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(gift[lang], callback_data="gift_video"))

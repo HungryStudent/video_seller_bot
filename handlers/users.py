@@ -44,6 +44,13 @@ async def reg_user(call: CallbackQuery):
     await call.message.delete()
 
 
+@dp.callback_query_handler(text="gift_video")
+async def gift_video(call: CallbackQuery):
+    lang = db.get_lang(call.from_user.id)
+    await call.message.answer(texts.Video.enter_url[lang], reply_markup=user_kb.get_cancel(lang))
+    await states.CreateVideo.enter_url.set()
+
+
 @dp.callback_query_handler(text="start_over")
 async def start_over(call: CallbackQuery):
     lang = db.get_lang(call.from_user.id)
@@ -78,13 +85,6 @@ async def cancel_input(message: Message, state: FSMContext):
 async def feedbacks(message: Message):
     lang = db.get_lang(message.from_user.id)
     await message.answer(texts.feedbacks[lang])
-
-
-@dp.message_handler(text="Поддержка")
-@dp.message_handler(text="Support")
-async def support(message: Message):
-    lang = db.get_lang(message.from_user.id)
-    await message.answer(texts.support[lang])
 
 
 @dp.message_handler(text="Купить")
@@ -207,6 +207,6 @@ async def enter_feedback(message: Message, state: FSMContext):
     lang = db.get_lang(message.from_user.id)
     data = await state.get_data()
     db.change_feedback_status(data["order_id"], message.from_user.id)
-    await message.answer(texts.StayFeedback.finish[lang])
+    await message.answer(texts.StayFeedback.finish[lang], reply_markup=user_kb.get_gift(lang))
     await message.forward(feedback_chat_id)
     await state.finish()
