@@ -14,15 +14,17 @@ class CheckSubMiddleware(BaseMiddleware):
     async def on_pre_process_update(self, update: Update, data: dict):
         if update.message:
             user_id = update.message.from_user.id
-        else:
+        elif update.callback_query:
             user_id = update.callback_query.from_user.id
+        else:
+            return
         channel_data = db.get_channel_config()
         try:
             status: ChatMember = await bot.get_chat_member(channel_data["id"], user_id)
             if status.status == "left":
-                await bot.send_message(user_id, sub_error["ru"], reply_markup=user.get_channel_url(channel_data["url"], "ru"))
+                await bot.send_message(user_id, sub_error["ru"],
+                                       reply_markup=user.get_channel_url(channel_data["url"], "ru"))
                 raise CancelHandler()
         except ChatNotFound as e:
             print(e)
             await bot.send_message(admin_id, "Проблема с каналом")
-
