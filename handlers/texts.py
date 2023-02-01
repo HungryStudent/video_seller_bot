@@ -9,7 +9,6 @@ cancel_input = {"ru": "Ввод остановлен",
 feedbacks = {"ru": "Отзывы: @reviews_renderforest",
              "en": "Feedbacks: @reviews_renderforest"}
 
-
 trial_error = {"ru": "Вы использовали свой пробный период",
                "en": "Have you used your trial period"}
 
@@ -45,6 +44,9 @@ sub_error = {"ru": "Для того, чтобы пользоваться бот�
              "en": "In order to use the bot, subscribe to the channel and try again"}
 
 admin_settings = "Вы перешли в настройки"
+
+error_logo = {"ru": "Пришлите логотип как фото, а не как документ (поставьте галочку 'Сжать изображение')",
+              "en": "Send the logo as a photo, not as a document (check the box 'Compress image')"}
 
 
 class Settings:
