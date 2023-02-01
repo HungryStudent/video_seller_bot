@@ -10,7 +10,7 @@ from utils import db
 app = FastAPI()
 
 
-def approve_order(order_id):
+async def approve_order(order_id):
     db.change_paid_status(order_id)
     order = db.get_order(order_id)
     lang = db.get_lang(order["user_id"])
@@ -25,7 +25,7 @@ def approve_order(order_id):
 
 @app.get('/api/pay')
 async def check_pay_freekassa(MERCHANT_ORDER_ID):
-    approve_order(MERCHANT_ORDER_ID)
+    await approve_order(MERCHANT_ORDER_ID)
     return 'YES'
 
 
@@ -33,7 +33,7 @@ async def check_pay_freekassa(MERCHANT_ORDER_ID):
 async def check_pay_yoomoney(req: Request):
     item = await req.form()
     order_id = int(item["label"])
-    approve_order(order_id)
+    await approve_order(order_id)
     raise HTTPException(200, "ok")
 
 
@@ -41,7 +41,7 @@ async def check_pay_yoomoney(req: Request):
 async def check_pay_qiwi(req: Request):
     item = await req.json()
     order_id = int(item["payment"]["comment"])
-    approve_order(order_id)
+    await approve_order(order_id)
     raise HTTPException(200, "ok")
 
 
