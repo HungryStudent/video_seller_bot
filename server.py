@@ -34,15 +34,16 @@ async def check_pay_yoomoney(req: Request):
     item = await req.form()
     order_id = int(item["label"])
     await approve_order(order_id)
-    raise HTTPException(200, "ok")
+    raise HTTPException(200, "OK")
 
 
 @app.post('/pay/qiwi')
 async def check_pay_qiwi(req: Request):
     item = await req.json()
-    order_id = int(item["payment"]["comment"])
-    await approve_order(order_id)
-    raise HTTPException(200, "ok")
+    if item["payment"]["status"] == "SUCCESS":
+        order_id = int(item["payment"]["comment"])
+        await approve_order(order_id)
+    raise HTTPException(200, "OK")
 
 
 @app.get('/ok')
