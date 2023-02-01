@@ -170,7 +170,8 @@ async def enter_logo(message: Message, state: FSMContext):
 
 @dp.message_handler(state=states.CreateVideo.enter_logo, content_types="document")
 async def error_logo(message: Message, state: FSMContext):
-    await message.answer("Пришлите логотип как фото, а не как документ")
+    lang = db.get_lang(message.from_user.id)
+    await message.answer(texts.error_logo[lang])
 
 
 @dp.message_handler(state=states.CreateVideo.enter_text)
