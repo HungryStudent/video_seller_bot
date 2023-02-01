@@ -40,8 +40,8 @@ async def check_pay_yoomoney(req: Request):
 @app.post('/pay/qiwi')
 async def check_pay_qiwi(req: Request):
     item = await req.json()
-    if item["payment"]["status"] == "SUCCESS":
-        order_id = int(item["payment"]["comment"])
+    if item["bill"]["status"]["value"] == "PAID":
+        order_id = int(item["bill"]["billId"])
         await approve_order(order_id)
     raise HTTPException(200, "OK")
 

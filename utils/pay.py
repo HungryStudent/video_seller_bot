@@ -1,5 +1,5 @@
 from yoomoney import Quickpay
-from config import FreeKassa, yoomoney_id, qiwi_phone
+from config import FreeKassa, yoomoney_id, qiwi_phone, qiwi_key
 
 import hashlib
 
@@ -23,5 +23,5 @@ def get_urls(order_id, amount, currency):
     )
     pay_urls["yoomoney"] = quickpay.redirected_url
     pay_urls[
-        "qiwi"] = f"https://qiwi.com/payment/form/99?extra%5B%27account%27%5D={qiwi_phone}&amountInteger={amount}&amountFraction=0&extra%5B%27comment%27%5D={order_id}&currency=643&blocked[0]=sum&blocked[1]=account&blocked[2]=comment"
+        "qiwi"] = f"https://oplata.qiwi.com/create?publicKey={qiwi_key}&billId={order_id}&amount={amount}"
     return pay_urls
