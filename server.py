@@ -10,26 +10,44 @@ from utils import db
 app = FastAPI()
 
 
-# MERCHANT_ID=27975&AMOUNT=200&intid=71951456&MERCHANT_ORDER_ID=359902077&P_EMAIL=skilord%40yandex.ru&P_PHONE=&CUR_ID=4&commission=0&SIGN=37ddd270ccb531c73a2f166e4c4c6cc0
-
-@app.get('/api/pay')
-async def check_pay_post(MERCHANT_ORDER_ID):
-    db.change_paid_status(MERCHANT_ORDER_ID)
-    order = db.get_order(MERCHANT_ORDER_ID)
+def approve_order(order_id):
+    db.change_paid_status(order_id)
+    order = db.get_order(order_id)
     lang = db.get_lang(order["user_id"])
     user = db.get_user(order["user_id"])
     await bot.send_message(order["user_id"], texts.Video.finish[lang])
     await bot.send_photo(admin_id, order["file_id"],
                          caption=texts.new_order[lang].format(username=user["username"],
-                                                                    url=order["url"],
-                                                                    text=order["slogan"]),
-                         reply_markup=admin_kb.new_order(order["user_id"], MERCHANT_ORDER_ID))
+                                                              url=order["url"],
+                                                              text=order["slogan"]),
+                         reply_markup=admin_kb.new_order(order["user_id"], order_id))
+
+
+@app.get('/api/pay')
+async def check_pay_freekassa(MERCHANT_ORDER_ID):
+    approve_order(MERCHANT_ORDER_ID)
     return 'YES'
+
+
+@app.post('/pay/yoomoney')
+async def check_pay_yoomoney(req: Request):
+    item = await req.form()
+    order_id = int(item["label"])
+    approve_order(order_id)
+    raise HTTPException(200, "ok")
+
+
+@app.post('/pay/qiwi')
+async def check_pay_qiwi(req: Request):
+    item = await req.json()
+    order_id = int(item["payment"]["comment"])
+    approve_order(order_id)
+    raise HTTPException(200, "ok")
 
 
 @app.get('/ok')
 async def checkay(req: Request):
-    raise HTTPException(200, "ok")
+    raise HTTPException(200, "OK")
 
 
 @app.get('/error')

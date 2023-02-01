@@ -43,8 +43,10 @@ def get_channel_url(url, lang):
                                                  InlineKeyboardButton(start_over[lang], callback_data="start_over"))
 
 
-def get_pay(pay_url, lang):
-    return InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(pay[lang], url=pay_url),
+def get_pay(pay_urls, lang):
+    return InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton("FreeKassa", url=pay_urls["freekassa"]),
+                                                 InlineKeyboardButton("YooMoney", url=pay_urls["yoomoney"]),
+                                                 InlineKeyboardButton("QIWI", url=pay_urls["qiwi"]),
                                                  InlineKeyboardButton(start_over[lang], callback_data="start_over"))
 
 

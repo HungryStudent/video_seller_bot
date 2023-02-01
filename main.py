@@ -1,9 +1,11 @@
+from aiogram.types import BotCommand
+
 from middlewares.subscribe import CheckSubMiddleware
 from aiogram.utils import executor
 
 from handlers import users
 from handlers import admin
-from create_bot import dp
+from create_bot import dp, bot
 from utils import db
 dp.middleware.setup(CheckSubMiddleware())
 

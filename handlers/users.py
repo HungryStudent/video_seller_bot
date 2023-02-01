@@ -125,8 +125,13 @@ async def enter_logo(message: Message, state: FSMContext):
     await states.CreateTrialVideo.next()
 
 
+@dp.message_handler(state=states.CreateTrialVideo.enter_logo, content_types="document")
+async def error_logo_trial(message: Message, state: FSMContext):
+    await message.answer("Пришлите логотип как фото, а не как документ")
+
+
 @dp.message_handler(state=states.CreateTrialVideo.enter_text)
-async def enter_logo(message: Message, state: FSMContext):
+async def enter_logo_trial(message: Message, state: FSMContext):
     lang = db.get_lang(message.from_user.id)
     text = message.text
     if message.text in ["Пропустить", "Skip"]:
@@ -162,6 +167,11 @@ async def enter_logo(message: Message, state: FSMContext):
     await states.CreateVideo.next()
 
 
+@dp.message_handler(state=states.CreateVideo.enter_logo, content_types="document")
+async def error_logo(message: Message, state: FSMContext):
+    await message.answer("Пришлите логотип как фото, а не как документ")
+
+
 @dp.message_handler(state=states.CreateVideo.enter_text)
 async def enter_logo(message: Message, state: FSMContext):
     lang = db.get_lang(message.from_user.id)
@@ -183,9 +193,9 @@ async def enter_logo(message: Message, state: FSMContext):
     else:
         price = db.get_price(lang)["price"]
         order_id = db.create_order(message.from_user.id, video_data)
-        pay_url = pay.get_pay(order_id, price, lang)
+        pay_urls = pay.get_urls(order_id, price, lang)
         await message.answer(texts.Video.pay[lang].format(price=price),
-                             reply_markup=user_kb.get_pay(pay_url, lang))
+                             reply_markup=user_kb.get_pay(pay_urls, lang))
     await state.finish()
 
 
